@@ -17,7 +17,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  
 };
+
 // next.config.js
 module.exports = {
   env: {
