@@ -9,6 +9,9 @@ import { vapi } from "@/lib/vapi.sdk";
 import { interviewer } from "@/constants";
 import { createFeedback } from "@/lib/actions/general.action";
 
+// ✅ Read env var at build time (avoids `{}` in client bundle)
+const VAPI_WORKFLOW_ID = process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!;
+
 enum CallStatus {
   INACTIVE = "INACTIVE",
   CONNECTING = "CONNECTING",
@@ -114,31 +117,22 @@ const Agent = ({
     }
   }, [messages, callStatus, feedbackId, interviewId, router, type, userId]);
 
-  const handleCall = async () => {
-    setCallStatus(CallStatus.CONNECTING);
+ const handleCall = async () => {
+  setCallStatus(CallStatus.CONNECTING);
 
-    if (type === "generate") {
-      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-        variableValues: {
-          username: userName,
-          userid: userId,
-        },
-      });
-    } else {
-      let formattedQuestions = "";
-      if (questions) {
-        formattedQuestions = questions
-          .map((question) => `- ${question}`)
-          .join("\n");
-      }
+  console.log("VAPI_WORKFLOW_ID:", VAPI_WORKFLOW_ID); // check it logs correctly
 
-      await vapi.start(interviewer, {
-        variableValues: {
-          questions: formattedQuestions,
-        },
-      });
-    }
-  };
+  if (type === "generate") {
+    await vapi.start(VAPI_WORKFLOW_ID, {
+      variableValues: {
+        username: userName,
+        userid: userId,
+      },
+    });
+  }
+  // ...
+};
+
 
   const handleDisconnect = () => {
     setCallStatus(CallStatus.FINISHED);

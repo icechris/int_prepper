@@ -18,5 +18,12 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
 };
+// next.config.js
+module.exports = {
+  env: {
+    NEXT_PUBLIC_VAPI_WORKFLOW_ID: process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID,
+    NEXT_PUBLIC_VAPI_WEB_TOKEN: process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN,
+  },
+};
 
 export default nextConfig;
